@@ -1,0 +1,6 @@
+[server]
+port =
+
+[bitmex_api]
+key_id =
+key_secret =
