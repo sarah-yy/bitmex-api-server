@@ -1,15 +1,29 @@
-import { SimpleMap } from "./types";
+import { ValidateFieldArr, ValueType } from "validate-ts-obj";
 
-export interface QueryInstrumentRequest {
+export interface QueryGetInstrumentReq {
   symbol?: string;
-  filter?: SimpleMap<string>;
-  columns?: string[];
+  // filter?: SimpleMap<string>;
+  // columns?: string[];
   count?: number;
   start?: number;
   reverse?: boolean;
-  startTime?: string;
-  endTime?: string;
+  // startTime?: string;
+  // endTime?: string;
 }
+
+export const queryGetInstrumentSchema: ValidateFieldArr = [{
+  name: "symbol",
+  type: ValueType.String,
+}, {
+  name: "count",
+  type: ValueType.Number,
+}, {
+  name: "start",
+  type: ValueType.Number,
+}, {
+  name: "reverse",
+  type: ValueType.Boolean,
+}];
 
 export interface Instrument {
   symbol: string;
@@ -104,3 +118,76 @@ export interface Instrument {
   fundingQuoteRate: number;
   timestamp: string;
 }
+
+export interface QueryGetUsdVolumesReq {
+  symbol?: string;
+  columns?: string[];
+}
+
+export interface UsdVolumeObj {
+  symbol: string;
+  currency: string;
+  turnover24h: number;
+  turnover7d?: number;
+  turnover30d: number;
+  turnoverYTD?: number;
+  turnover365d: number;
+  turnover: number;
+  price24h?: number;
+  price7d?: number;
+  price30d?: number;
+  priceYTD?: number;
+  price365d?: number;
+  lastPrice?: number;
+}
+
+export const queryGetUsdVolumeSchema: ValidateFieldArr = [{
+  name: "symbol",
+  type: ValueType.String,
+}];
+
+export interface ActiveIntervalResponseObj {
+  intervals: string[];
+  symbols: string[];
+}
+
+export interface QueryGetCompositeIndexReq {
+  symbol?: string;
+  // filter?: SimpleMap<string>;
+  // columns?: string[];
+  count?: number;
+  start?: number;
+  reverse?: boolean;
+  // startTime?: string;
+  // endTime?: string;
+}
+
+export interface CompositeIndexObj {
+  timestamp: string;
+  symbol: string;
+  indexSymbol: string;
+  indexMultiplier: number;
+  reference: string;
+  lastPrice: number;
+  sourcePrice: number;
+  conversionIndex: string;
+  conversionIndexPrice: number;
+  weight: number;
+  logged: string;
+}
+
+export const queryGetCompositeIndexSchema: ValidateFieldArr = [{
+  name: "symbol",
+  type: ValueType.String,
+  required: true,
+  minLength: 1,
+}, {
+  name: "count",
+  type: ValueType.Number,
+}, {
+  name: "start",
+  type: ValueType.Number,
+}, {
+  name: "reverse",
+  type: ValueType.Boolean,
+}];
