@@ -170,8 +170,8 @@ export interface QueryGetCompositeIndexReq {
   count?: number;
   start?: number;
   reverse?: boolean;
-  // startTime?: string;
-  // endTime?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface CompositeIndexObj {
@@ -204,4 +204,10 @@ export const queryGetCompositeIndexSchema: ValidateFieldArr = [{
 }, {
   name: "reverse",
   type: ValueType.Boolean,
+}, {
+  name: "startTime",
+  type: ValueType.DateTime,
+}, {
+  name: "endTime",
+  type: ValueType.DateTime,
 }];
