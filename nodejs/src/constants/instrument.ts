@@ -7,8 +7,8 @@ export interface QueryGetInstrumentReq {
   count?: number;
   start?: number;
   reverse?: boolean;
-  // startTime?: string;
-  // endTime?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export const queryGetInstrumentSchema: ValidateFieldArr = [{
@@ -29,6 +29,12 @@ export const queryGetInstrumentSchema: ValidateFieldArr = [{
 }, {
   name: "reverse",
   type: ValueType.Boolean,
+}, {
+  name: "startTime",
+  type: ValueType.DateTime,
+}, {
+  name: "endTime",
+  type: ValueType.DateTime,
 }];
 
 export interface Instrument {

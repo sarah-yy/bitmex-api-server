@@ -17,6 +17,13 @@ export const getInstruments = async (req: Request, res: Response) => {
   if (typeof validateOutcome === "string") {
     return res.status(403).send(`Query params error: ${validateOutcome}`);
   }
+  if (queryObj.startTime && queryObj.endTime) {
+    const startTimestamp = new Date(queryObj.startTime).getTime();
+    const endTimestamp = new Date(queryObj.endTime).getTime();
+    if (startTimestamp >= endTimestamp) {
+      return res.status(403).send("Query params error: Please make sure startTime is strictly earlier than endTime");
+    }
+  }
 
   const instruments = await bitmexClient.Instruments(queryObj as QueryGetInstrumentReq);
   res.status(200).set("Content-Type", ReturnTypes.JSON).send(instruments);
