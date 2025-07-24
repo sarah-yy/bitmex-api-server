@@ -26,12 +26,9 @@ export class BitmexClient {
     return new Promise((resolve, reject) => {
       const parsedParams: BaseRequest = {
         ...req,
-        // ...req.filter && ({
-        //   filter: JSON.stringify(req.filter),
-        // }),
-        // ...req.columns && ({
-        //   columns: JSON.stringify(req.columns),
-        // }),
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
       };
 
       const url = getReqUrl(this.URL, PATHS.Instrument.All, parsedParams);

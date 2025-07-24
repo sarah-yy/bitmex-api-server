@@ -14,6 +14,14 @@ const parseReqParam = (value: any, validateItem: ValidateObjStruct) => {
   switch (validateItem.type) {
     case ValueType.Number: return typeof value !== "number" ? Number(value) : value;
     case ValueType.Boolean: return typeof value !== "boolean" ? Boolean(value) : value;
+    case ValueType.Array: {
+      try {
+        const array = JSON.parse(value);
+        return array;
+      } catch (err) {
+        return value;
+      }
+    }
     default: return value;
   }
 };

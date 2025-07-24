@@ -554,7 +554,7 @@ __metadata:
     toml: "npm:^3.0.0"
     tsc: "npm:^2.0.4"
     typescript: "npm:^5.4.3"
-    validate-ts-obj: "npm:0.0.5"
+    validate-ts-obj: "npm:0.1.0"
   languageName: unknown
   linkType: soft
 
@@ -2792,10 +2792,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"validate-ts-obj@npm:0.0.5":
-  version: 0.0.5
-  resolution: "validate-ts-obj@npm:0.0.5"
-  checksum: 10c0/77c7fad973f63b4d5491bb2428a340e0938824c5efef9508193daa60951de7456fba24d9038842a35432b050af0d73be0b6789688f71b963aed37a97e9f58cb3
+"validate-ts-obj@npm:0.1.0":
+  version: 0.1.0
+  resolution: "validate-ts-obj@npm:0.1.0"
+  checksum: 10c0/610519204a826924b06dbcb5370732aed5ca9c739236f9637c7c9b69a8b6e1e2c66340ce481bb4b206e0e06247990c25f68045a64320f9bcfd2a43ab534251d7
   languageName: node
   linkType: hard
 
