@@ -3,17 +3,23 @@ import { ValidateFieldArr, ValueType } from "validate-ts-obj";
 export interface QueryGetInstrumentReq {
   symbol?: string;
   // filter?: SimpleMap<string>;
-  // columns?: string[];
+  columns?: string[];
   count?: number;
   start?: number;
   reverse?: boolean;
-  // startTime?: string;
-  // endTime?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export const queryGetInstrumentSchema: ValidateFieldArr = [{
   name: "symbol",
   type: ValueType.String,
+}, {
+  name: "columns",
+  type: ValueType.Array,
+  arrayType: {
+    type: ValueType.String,
+  },
 }, {
   name: "count",
   type: ValueType.Number,
@@ -23,6 +29,12 @@ export const queryGetInstrumentSchema: ValidateFieldArr = [{
 }, {
   name: "reverse",
   type: ValueType.Boolean,
+}, {
+  name: "startTime",
+  type: ValueType.DateTime,
+}, {
+  name: "endTime",
+  type: ValueType.DateTime,
 }];
 
 export interface Instrument {
@@ -154,24 +166,20 @@ export interface ActiveIntervalResponseObj {
 export interface QueryGetCompositeIndexReq {
   symbol?: string;
   // filter?: SimpleMap<string>;
-  // columns?: string[];
+  columns?: string[];
   count?: number;
   start?: number;
   reverse?: boolean;
-  // startTime?: string;
-  // endTime?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface CompositeIndexObj {
   timestamp: string;
   symbol: string;
   indexSymbol: string;
-  indexMultiplier: number;
   reference: string;
   lastPrice: number;
-  sourcePrice: number;
-  conversionIndex: string;
-  conversionIndexPrice: number;
   weight: number;
   logged: string;
 }
@@ -182,6 +190,12 @@ export const queryGetCompositeIndexSchema: ValidateFieldArr = [{
   required: true,
   minLength: 1,
 }, {
+  name: "columns",
+  type: ValueType.Array,
+  arrayType: {
+    type: ValueType.String,
+  },
+}, {
   name: "count",
   type: ValueType.Number,
 }, {
@@ -190,4 +204,10 @@ export const queryGetCompositeIndexSchema: ValidateFieldArr = [{
 }, {
   name: "reverse",
   type: ValueType.Boolean,
+}, {
+  name: "startTime",
+  type: ValueType.DateTime,
+}, {
+  name: "endTime",
+  type: ValueType.DateTime,
 }];

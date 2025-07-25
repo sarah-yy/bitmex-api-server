@@ -17,7 +17,7 @@
     "express": "^4.19.2",
     "node-fetch": "^3.3.2",
     "toml": "^3.0.0",
-    "validate-ts-obj": "0.0.5"
+    "validate-ts-obj": "0.2.0"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin-ts": "^1.7.2",

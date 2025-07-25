@@ -14,6 +14,24 @@ const parseReqParam = (value: any, validateItem: ValidateObjStruct) => {
   switch (validateItem.type) {
     case ValueType.Number: return typeof value !== "number" ? Number(value) : value;
     case ValueType.Boolean: return typeof value !== "boolean" ? Boolean(value) : value;
+    case ValueType.Array: {
+      try {
+        const array = JSON.parse(value);
+        if (!isArray(array)) {
+          throw new Error("not array");
+        }
+        return array;
+      } catch (err) {
+        return [];
+      }
+    }
+    case ValueType.DateTime: {
+      const dateObj = new Date(value);
+      if (dateObj.toString() !== "Invalid Date") {
+        return dateObj.toISOString();
+      }
+      return value;
+    }
     default: return value;
   }
 };
@@ -24,4 +42,10 @@ export const getParsedQueryObj = (queryObj: SimpleMap<any>, validateSchema: Vali
     prev[item.name] = parseReqParam(queryObj[item.name], item);
     return prev;
   }, {});
+};
+
+export const isArray = (item: any): boolean => {
+  if (typeof item !== "object") return false;
+  if (!!Array.isArray) return Array.isArray(item);
+  return Object.prototype.toString.call(item) === "[object Array]";
 };
