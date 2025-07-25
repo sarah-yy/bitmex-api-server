@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import routes from "./routes";
 import { getConfig } from "./utils";
@@ -15,6 +16,17 @@ if (!tomlConfig.bitmexApi?.keyId || !tomlConfig.bitmexApi?.keySecret) {
 port = tomlConfig.port ?? DEFAULT_PORT;
 
 const app = express();
+
+const environment = tomlConfig.envName ?? "development";
+
+if (environment === "production") {
+  // Third-Party Middleware
+  app.use(cors());
+
+  // Built-In Middleware
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+}
 
 app.use("/api", routes);
 

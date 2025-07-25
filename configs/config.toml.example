@@ -4,3 +4,6 @@ port =
 [bitmex_api]
 key_id =
 key_secret =
+
+[env]
+env_name =

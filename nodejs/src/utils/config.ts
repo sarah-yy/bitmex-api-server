@@ -8,6 +8,7 @@ interface TomlConfig {
     keyId?: string;
     keySecret?: string;
   };
+  envName?: "development" | "production";
 }
 
 const defaultTomlConfig: TomlConfig = {};
@@ -31,6 +32,11 @@ export const getConfig = (): TomlConfig => {
         keySecret: config.bitmex_api.key_secret,
       };
     }
+
+    if (typeof config.env.env_name === "string") {
+      tomlConfig.envName = config.env.env_name;
+    }
+
     return tomlConfig;
   } catch (_err) {
     return defaultTomlConfig;
