@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, Instrument, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, Instrument, LeaderboardItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultLeaderboardReq } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -22,6 +22,9 @@ export class BitmexClient {
     this.keySecret = keySecret;
   }
 
+  /**
+   * Instrument endpoints
+   */
   public async Instruments(req: QueryGetInstrumentReq = {}): Promise<Instrument[]> {
     return new Promise((resolve, reject) => {
       const parsedParams: BaseRequest = {
@@ -117,6 +120,26 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as Instrument[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Leaderboard endpoints
+   */
+  public async Leaderboard(req: QueryGetLeaderboardReq = defaultLeaderboardReq): Promise<LeaderboardItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedReq = { ...req } as BaseRequest;
+      const url = getReqUrl(this.URL, PATHS.Leaderboard.All, parsedReq);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Leaderboard.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedReq),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as LeaderboardItem[]))
         .catch(reject);
     });
   }
