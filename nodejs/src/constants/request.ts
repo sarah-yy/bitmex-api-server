@@ -13,4 +13,7 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
     Indices: "/instrument/indices",
     UsdVolume: "/instrument/usdVolume",
   },
+  Leaderboard: {
+    All: "/leaderboard",
+  },
 };
