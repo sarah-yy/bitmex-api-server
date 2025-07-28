@@ -23,6 +23,7 @@ export const queryGetOrderBookSchema: ValidateFieldArr = [{
   name: "symbol",
   type: ValueType.String,
   required: true,
+  minLength: 1,
 }, {
   name: "depth",
   type: ValueType.Number,

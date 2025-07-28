@@ -1,4 +1,5 @@
-import { ValidateFieldArr, ValueType } from "validate-ts-obj";
+import { ValidateFieldArr } from "validate-ts-obj";
+import { BaseRequiredQueryReq, queryBaseRequiredQuerySchema } from "./request";
 
 export interface FundingItem {
   timestamp: string;
@@ -8,42 +9,10 @@ export interface FundingItem {
   fundingRateDaily: number;
 }
 
-export interface QueryGetFundingReq {
-  symbol: string;
-  columns?: string[];
-  count?: number;
-  start?: number;
-  reverse?: boolean;
-  startTime?: string;
-  endTime?: string;
-}
+export type QueryGetFundingReq = BaseRequiredQueryReq;
 
 export const defaultGetFundingReq: QueryGetFundingReq = {
   symbol: "XBT",
 };
 
-export const queryGetFundingSchema: ValidateFieldArr = [{
-  name: "symbol",
-  type: ValueType.String,
-}, {
-  name: "columns",
-  type: ValueType.Array,
-  arrayType: {
-    type: ValueType.String,
-  },
-}, {
-  name: "count",
-  type: ValueType.Number,
-}, {
-  name: "start",
-  type: ValueType.Number,
-}, {
-  name: "reverse",
-  type: ValueType.Boolean,
-}, {
-  name: "startTime",
-  type: ValueType.DateTime,
-}, {
-  name: "endTime",
-  type: ValueType.DateTime,
-}];
+export const queryGetFundingSchema: ValidateFieldArr = [...queryBaseRequiredQuerySchema];
