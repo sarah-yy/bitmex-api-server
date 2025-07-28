@@ -22,4 +22,9 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
   Orderbook: {
     L2: "/orderBook/L2",
   },
+  Stats: {
+    All: "/stats",
+    History: "/stats/history",
+    HistoryUSD: "/stats/historyUSD",
+  },
 };

@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -194,6 +194,57 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as OrderBookItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Stats endpoints 
+   */
+  public async Stats(): Promise<StatsItem[]> {
+    return new Promise((resolve, reject) => {
+      const url = getReqUrl(this.URL, PATHS.Stats.All);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Stats.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr({}),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as StatsItem[]))
+        .catch(reject);
+    });
+  }
+
+  public async StatsHistory(): Promise<StatsHistoryItem[]> {
+    return new Promise((resolve, reject) => {
+      const url = getReqUrl(this.URL, PATHS.Stats.History);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Stats.History,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr({}),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as StatsHistoryItem[]))
+        .catch(reject);
+    });
+  }
+
+  public async StatsHistoryUSD(): Promise<StatsHistoryUSDItem[]> {
+    return new Promise((resolve, reject) => {
+      const url = getReqUrl(this.URL, PATHS.Stats.HistoryUSD);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Stats.HistoryUSD,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr({}),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as StatsHistoryUSDItem[]))
         .catch(reject);
     });
   }
