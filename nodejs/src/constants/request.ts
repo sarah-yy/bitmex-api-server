@@ -19,4 +19,7 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
   Funding: {
     All: "/funding",
   },
+  Orderbook: {
+    L2: "/orderBook/L2",
+  },
 };

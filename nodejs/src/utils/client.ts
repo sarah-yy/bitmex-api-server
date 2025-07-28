@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -173,6 +173,27 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as LeaderboardItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Orderbook endpoints
+   */
+  public async OrderBookL2(req: QueryGetOrderBookReq = defaultGetOrderBookReq): Promise<OrderBookItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = { ...req };
+
+      const url = getReqUrl(this.URL, PATHS.Orderbook.L2, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Orderbook.L2,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as OrderBookItem[]))
         .catch(reject);
     });
   }

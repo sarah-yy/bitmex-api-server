@@ -1,9 +1,9 @@
 import Router from "express";
 import { PATHS } from "../constants";
-import { Funding } from "../controllers";
+import { Orderbook } from "../controllers";
 
 const router = Router();
 
-router.get(PATHS.Funding.All, Funding.getFunding);
+router.get(PATHS.Orderbook.L2, Orderbook.getOrderbookL2);
 
 export default router;
