@@ -6,4 +6,5 @@ export * from "./liquidation";
 export * from "./orderbook";
 export * from "./request";
 export * from "./stats";
+export * from "./trade";
 export * from "./types";

@@ -30,4 +30,8 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
     History: "/stats/history",
     HistoryUSD: "/stats/historyUSD",
   },
+  Trade: {
+    All: "/trade",
+    Bucketed: "/trade/bucketed",
+  },
 };

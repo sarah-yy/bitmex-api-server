@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -265,6 +265,53 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as StatsHistoryUSDItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Trades endpoints
+   */
+  public async Trades(req: QueryGetTradesReq): Promise<TradeObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Trade.All, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Trade.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as TradeObj[]))
+        .catch(reject);
+    });
+  }
+
+  public async BucketedTrades(req: QueryGetBucketedTradesReq = defaultGetBucketedTradesReq): Promise<TradeBucketObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Trade.Bucketed, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Trade.Bucketed,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as TradeBucketObj[]))
         .catch(reject);
     });
   }

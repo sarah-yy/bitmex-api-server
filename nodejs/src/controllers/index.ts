@@ -4,3 +4,4 @@ export * as Leaderboard from "./leaderboard";
 export * as Liquidation from "./liquidation";
 export * as Orderbook from "./orderbook";
 export * as Stats from "./stats";
+export * as Trade from "./trade";
