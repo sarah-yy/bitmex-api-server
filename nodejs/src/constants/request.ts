@@ -16,4 +16,7 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
   Leaderboard: {
     All: "/leaderboard",
   },
+  Funding: {
+    All: "/funding",
+  },
 };

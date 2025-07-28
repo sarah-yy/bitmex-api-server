@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, Instrument, LeaderboardItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultLeaderboardReq } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -20,6 +20,32 @@ export class BitmexClient {
     }
     this.keyId = keyId;
     this.keySecret = keySecret;
+  }
+
+  /**
+   * Funding endpoints
+   */
+  public async Funding(req: QueryGetFundingReq = defaultGetFundingReq): Promise<FundingItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+
+      const url = getReqUrl(this.URL, PATHS.Funding.All, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Funding.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as FundingItem[]))
+        .catch(reject);
+    });
   }
 
   /**
@@ -92,14 +118,21 @@ export class BitmexClient {
     });
   }
 
-  public async CompositeIndex(req: QueryGetCompositeIndexReq = {}): Promise<CompositeIndexObj[]> {
+  public async CompositeIndex(req: QueryGetCompositeIndexReq = defaultGetCompositeIndexReq): Promise<CompositeIndexObj[]> {
     return new Promise((resolve, reject) => {
-      const url = getReqUrl(this.URL, PATHS.Instrument.CompositeIndex, req as BaseRequest);
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+
+      const url = getReqUrl(this.URL, PATHS.Instrument.CompositeIndex, parsedParams);
       const headers = this.genBitmexHeadersObj(
         PATHS.Instrument.CompositeIndex,
         defaultExpiryDelay,
         HTTPMethod.Get,
-        getQueryParamsStr(req as BaseRequest),
+        getQueryParamsStr(parsedParams),
       );
       fetch(url, { headers })
         .then((response) => response.json())

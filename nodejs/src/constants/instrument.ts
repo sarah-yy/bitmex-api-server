@@ -2,7 +2,6 @@ import { ValidateFieldArr, ValueType } from "validate-ts-obj";
 
 export interface QueryGetInstrumentReq {
   symbol?: string;
-  // filter?: SimpleMap<string>;
   columns?: string[];
   count?: number;
   start?: number;
@@ -164,8 +163,7 @@ export interface ActiveIntervalResponseObj {
 }
 
 export interface QueryGetCompositeIndexReq {
-  symbol?: string;
-  // filter?: SimpleMap<string>;
+  symbol: string;
   columns?: string[];
   count?: number;
   start?: number;
@@ -173,6 +171,10 @@ export interface QueryGetCompositeIndexReq {
   startTime?: string;
   endTime?: string;
 }
+
+export const defaultGetCompositeIndexReq: QueryGetCompositeIndexReq = {
+  symbol: ".BXBT",
+};
 
 export interface CompositeIndexObj {
   timestamp: string;
