@@ -2,6 +2,7 @@ export * from "./datetime";
 export * from "./funding";
 export * from "./instrument";
 export * from "./leaderboard";
+export * from "./liquidation";
 export * from "./orderbook";
 export * from "./request";
 export * from "./stats";

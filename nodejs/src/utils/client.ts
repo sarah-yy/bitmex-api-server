@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -173,6 +173,26 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as LeaderboardItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Liquidations endpoints
+   */
+  public async Liquidations(req: QueryGetLiquidationsReq): Promise<LiquidationObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedReq = { ...req } as BaseRequest;
+      const url = getReqUrl(this.URL, PATHS.Liquidation.All, parsedReq);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Liquidation.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedReq),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as LiquidationObj[]))
         .catch(reject);
     });
   }
