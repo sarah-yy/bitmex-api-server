@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -214,6 +214,32 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as OrderBookItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Settlement endpoints
+   */
+  public async Settlement(req: QueryGetSettlementReq): Promise<SettlementObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+
+      const url = getReqUrl(this.URL, PATHS.Settlement.History, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Settlement.History,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as SettlementObj[]))
         .catch(reject);
     });
   }

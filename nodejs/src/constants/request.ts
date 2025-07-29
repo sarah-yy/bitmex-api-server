@@ -95,6 +95,9 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
   Orderbook: {
     L2: "/orderBook/L2",
   },
+  Settlement: {
+    History: "/settlement",
+  },
   Stats: {
     All: "/stats",
     History: "/stats/history",
