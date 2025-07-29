@@ -4,6 +4,7 @@ export * from "./instrument";
 export * from "./leaderboard";
 export * from "./liquidation";
 export * from "./orderbook";
+export * from "./quote";
 export * from "./request";
 export * from "./settlement";
 export * from "./stats";

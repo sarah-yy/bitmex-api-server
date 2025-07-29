@@ -73,6 +73,25 @@ export const queryBaseRequiredQuerySchema: ValidateFieldArr = [{
   type: ValueType.DateTime,
 }];
 
+export interface BaseBucketedQueryReq extends BaseOptionalQueryReq {
+  binSize: "1m" | "5m" | "1h" | "1d";
+  partial?: boolean;
+}
+
+export const defaultBaseBucketedQueryReq: BaseBucketedQueryReq = {
+  binSize: "1h",
+};
+
+export const queryBaseBucketedQuerySchema: ValidateFieldArr = [{
+  name: "binSize",
+  type: ValueType.String,
+  required: true,
+  acceptedValues: ["1m", "5m", "1h", "1d"],
+}, {
+  name: "partial",
+  type: ValueType.Boolean,
+}, ...queryBaseOptionalQuerySchema];
+
 export const PATHS: SimpleMap<SimpleMap<string>> = {
   Instrument: {
     Active: "/instrument/active",
@@ -94,6 +113,10 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
   },
   Orderbook: {
     L2: "/orderBook/L2",
+  },
+  Quote: {
+    All: "/quote",
+    Bucketed: "/quote/bucketed",
   },
   Settlement: {
     History: "/settlement",

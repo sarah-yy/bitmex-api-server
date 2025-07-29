@@ -1,5 +1,5 @@
 import { ValidateFieldArr, ValueType } from "validate-ts-obj";
-import { BaseOptionalQueryReq, queryBaseOptionalQuerySchema } from "./request";
+import { BaseOptionalQueryReq, queryBaseOptionalQuerySchema, BaseBucketedQueryReq, defaultBaseBucketedQueryReq, queryBaseBucketedQuerySchema } from "./request";
 
 export interface TradeObj {
   timestamp: string;
@@ -35,21 +35,10 @@ export interface TradeBucketObj {
   foreignNotional?: number;
 }
 
-export interface QueryGetBucketedTradesReq extends BaseOptionalQueryReq {
-  binSize: "1m" | "5m" | "1h" | "1d";
-  partial?: boolean;
-}
+export type QueryGetBucketedTradesReq = BaseBucketedQueryReq;
 
 export const defaultGetBucketedTradesReq: QueryGetBucketedTradesReq = {
-  binSize: "1h",
+  ...defaultBaseBucketedQueryReq,
 };
 
-export const queryGetBucketedTradesSchema: ValidateFieldArr = [{
-  name: "binSize",
-  type: ValueType.String,
-  required: true,
-  acceptedValues: ["1m", "5m", "1h", "1d"],
-}, {
-  name: "partial",
-  type: ValueType.Boolean,
-}, ...queryBaseOptionalQuerySchema];
+export const queryGetBucketedTradesSchema: ValidateFieldArr = [...queryBaseBucketedQuerySchema];

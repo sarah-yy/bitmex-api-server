@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, defaultGetQuoteReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj, QueryGetQuoteReq, QueryGetBucketedQuoteReq, defaultGetBucketedQuoteReq, QuoteItem } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -214,6 +214,53 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as OrderBookItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Quote endpoints
+   */
+  public async Quote(req: QueryGetQuoteReq = defaultGetQuoteReq): Promise<QuoteItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Quote.All, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Quote.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as QuoteItem[]))
+        .catch(reject);
+    });
+  }
+
+  public async BucketedQuote(req: QueryGetBucketedQuoteReq = defaultGetBucketedQuoteReq): Promise<QuoteItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Quote.Bucketed, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Quote.Bucketed,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as QuoteItem[]))
         .catch(reject);
     });
   }
