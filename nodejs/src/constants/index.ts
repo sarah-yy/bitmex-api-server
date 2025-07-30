@@ -1,5 +1,6 @@
 export * from "./datetime";
 export * from "./funding";
+export * from "./guild";
 export * from "./instrument";
 export * from "./insurance";
 export * from "./leaderboard";

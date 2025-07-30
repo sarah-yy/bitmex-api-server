@@ -77,6 +77,9 @@ export const queryBaseBucketedQuerySchema: ValidateFieldArr = [{
 }, ...queryBaseOptionalQuerySchema];
 
 export const PATHS: SimpleMap<SimpleMap<string>> = {
+  Guild: {
+    All: "/guild",
+  },
   Instrument: {
     Active: "/instrument/active",
     ActiveAndIndices: "/instrument/activeAndIndices",
