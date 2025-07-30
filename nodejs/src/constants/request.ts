@@ -4,8 +4,7 @@ import { SimpleMap } from "./types";
 export type RequestValue = string | boolean | number;
 export type BaseRequest = SimpleMap<RequestValue>;
 
-export interface BaseOptionalQueryReq {
-  symbol?: string;
+export interface BaseFilterQueryReq {
   columns?: string[];
   count?: number;
   start?: number;
@@ -14,11 +13,7 @@ export interface BaseOptionalQueryReq {
   endTime?: string;
 }
 
-export const queryBaseOptionalQuerySchema: ValidateFieldArr = [{
-  name: "symbol",
-  type: ValueType.String,
-  minLength: 1,
-}, {
+export const queryBaseFilterQuerySchema: ValidateFieldArr = [{
   name: "columns",
   type: ValueType.Array,
   arrayType: {
@@ -40,6 +35,16 @@ export const queryBaseOptionalQuerySchema: ValidateFieldArr = [{
   name: "endTime",
   type: ValueType.DateTime,
 }];
+
+export type BaseOptionalQueryReq = BaseFilterQueryReq & {
+  symbol?: string;
+};
+
+export const queryBaseOptionalQuerySchema: ValidateFieldArr = [{
+  name: "symbol",
+  type: ValueType.String,
+  minLength: 1,
+}, ...queryBaseFilterQuerySchema];
 
 export type BaseRequiredQueryReq = Omit<BaseOptionalQueryReq, "symbol"> & {
   symbol: string;
@@ -50,28 +55,7 @@ export const queryBaseRequiredQuerySchema: ValidateFieldArr = [{
   type: ValueType.String,
   required: true,
   minLength: 1,
-}, {
-  name: "columns",
-  type: ValueType.Array,
-  arrayType: {
-    type: ValueType.String,
-  },
-}, {
-  name: "count",
-  type: ValueType.Number,
-}, {
-  name: "start",
-  type: ValueType.Number,
-}, {
-  name: "reverse",
-  type: ValueType.Boolean,
-}, {
-  name: "startTime",
-  type: ValueType.DateTime,
-}, {
-  name: "endTime",
-  type: ValueType.DateTime,
-}];
+}, ...queryBaseFilterQuerySchema];
 
 export interface BaseBucketedQueryReq extends BaseOptionalQueryReq {
   binSize: "1m" | "5m" | "1h" | "1d";
@@ -101,6 +85,9 @@ export const PATHS: SimpleMap<SimpleMap<string>> = {
     CompositeIndex: "/instrument/compositeIndex",
     Indices: "/instrument/indices",
     UsdVolume: "/instrument/usdVolume",
+  },
+  Insurance: {
+    All: "/insurance",
   },
   Leaderboard: {
     All: "/leaderboard",

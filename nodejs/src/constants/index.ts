@@ -1,6 +1,7 @@
 export * from "./datetime";
 export * from "./funding";
 export * from "./instrument";
+export * from "./insurance";
 export * from "./leaderboard";
 export * from "./liquidation";
 export * from "./orderbook";

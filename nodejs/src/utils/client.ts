@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, defaultGetQuoteReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj, QueryGetQuoteReq, QueryGetBucketedQuoteReq, defaultGetBucketedQuoteReq, QuoteItem } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, defaultGetQuoteReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj, QueryGetQuoteReq, QueryGetBucketedQuoteReq, defaultGetBucketedQuoteReq, QuoteItem, QueryGetInsuranceReq, InsuranceObj } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -153,6 +153,26 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as Instrument[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Insurance endpoints
+   */
+  public async Insurance(req: QueryGetInsuranceReq): Promise<InsuranceObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedReq = { ...req } as BaseRequest;
+      const url = getReqUrl(this.URL, PATHS.Insurance.All, parsedReq);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Insurance.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedReq),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as InsuranceObj[]))
         .catch(reject);
     });
   }

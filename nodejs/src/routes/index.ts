@@ -1,6 +1,7 @@
 import { Router } from "express";
 import fundingRoutes from "./funding";
 import instrumentRoutes from "./instrument";
+import insuranceRoutes from "./insurance";
 import leaderboardRoutes from "./leaderboard";
 import liquidationRoutes from "./liquidation";
 import orderbookRoutes from "./orderbook";
@@ -13,6 +14,7 @@ const router = Router();
 
 router.use(fundingRoutes);
 router.use(instrumentRoutes);
+router.use(insuranceRoutes);
 router.use(leaderboardRoutes);
 router.use(liquidationRoutes);
 router.use(orderbookRoutes);
