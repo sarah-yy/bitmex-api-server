@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { validateBodyObj } from "validate-ts-obj";
-import { QueryGetLeaderboardReq, queryGetLeaderboardSchema } from "../constants";
+import { QueryGetInsuranceReq, queryGetInsuranceSchema } from "../constants";
 import { BitmexClient, getConfig, getParsedQueryObj, ReturnTypes } from "../utils";
 
 const config = getConfig();
@@ -11,13 +11,13 @@ if (!config.bitmexApi?.keyId || !config.bitmexApi?.keySecret) {
 
 const bitmexClient = new BitmexClient(config.bitmexApi.keyId, config.bitmexApi.keySecret);
 
-export const getLeaderboard = async (req: Request, res: Response) => {
-  const queryObj = getParsedQueryObj(req.query, queryGetLeaderboardSchema);
-  const validateOutcome = validateBodyObj(queryObj, queryGetLeaderboardSchema);
+export const getInsurance = async (req: Request, res: Response) => {
+  const queryObj = getParsedQueryObj(req.query, queryGetInsuranceSchema);
+  const validateOutcome = validateBodyObj(queryObj, queryGetInsuranceSchema);
   if (typeof validateOutcome === "string") {
     return res.status(403).send(`Query params error: ${validateOutcome}`);
   }
 
-  const leaderboard = await bitmexClient.Leaderboard(queryObj as QueryGetLeaderboardReq);
-  res.status(200).set("Content-Type", ReturnTypes.JSON).send(leaderboard);
+  const insurance = await bitmexClient.Insurance(queryObj as QueryGetInsuranceReq);
+  res.status(200).set("Content-Type", ReturnTypes.JSON).send(insurance);
 };

@@ -1,41 +1,9 @@
 import { ValidateFieldArr, ValueType } from "validate-ts-obj";
+import { BaseOptionalQueryReq, queryBaseOptionalQuerySchema, BaseRequiredQueryReq, queryBaseRequiredQuerySchema } from "./request";
 
-export interface QueryGetInstrumentReq {
-  symbol?: string;
-  // filter?: SimpleMap<string>;
-  columns?: string[];
-  count?: number;
-  start?: number;
-  reverse?: boolean;
-  startTime?: string;
-  endTime?: string;
-}
+export type QueryGetInstrumentReq = BaseOptionalQueryReq;
 
-export const queryGetInstrumentSchema: ValidateFieldArr = [{
-  name: "symbol",
-  type: ValueType.String,
-}, {
-  name: "columns",
-  type: ValueType.Array,
-  arrayType: {
-    type: ValueType.String,
-  },
-}, {
-  name: "count",
-  type: ValueType.Number,
-}, {
-  name: "start",
-  type: ValueType.Number,
-}, {
-  name: "reverse",
-  type: ValueType.Boolean,
-}, {
-  name: "startTime",
-  type: ValueType.DateTime,
-}, {
-  name: "endTime",
-  type: ValueType.DateTime,
-}];
+export const queryGetInstrumentSchema: ValidateFieldArr = [...queryBaseOptionalQuerySchema];
 
 export interface Instrument {
   symbol: string;
@@ -156,6 +124,7 @@ export interface UsdVolumeObj {
 export const queryGetUsdVolumeSchema: ValidateFieldArr = [{
   name: "symbol",
   type: ValueType.String,
+  minLength: 1,
 }];
 
 export interface ActiveIntervalResponseObj {
@@ -163,16 +132,11 @@ export interface ActiveIntervalResponseObj {
   symbols: string[];
 }
 
-export interface QueryGetCompositeIndexReq {
-  symbol?: string;
-  // filter?: SimpleMap<string>;
-  columns?: string[];
-  count?: number;
-  start?: number;
-  reverse?: boolean;
-  startTime?: string;
-  endTime?: string;
-}
+export type QueryGetCompositeIndexReq = BaseRequiredQueryReq;
+
+export const defaultGetCompositeIndexReq: QueryGetCompositeIndexReq = {
+  symbol: ".BXBT",
+};
 
 export interface CompositeIndexObj {
   timestamp: string;
@@ -184,30 +148,4 @@ export interface CompositeIndexObj {
   logged: string;
 }
 
-export const queryGetCompositeIndexSchema: ValidateFieldArr = [{
-  name: "symbol",
-  type: ValueType.String,
-  required: true,
-  minLength: 1,
-}, {
-  name: "columns",
-  type: ValueType.Array,
-  arrayType: {
-    type: ValueType.String,
-  },
-}, {
-  name: "count",
-  type: ValueType.Number,
-}, {
-  name: "start",
-  type: ValueType.Number,
-}, {
-  name: "reverse",
-  type: ValueType.Boolean,
-}, {
-  name: "startTime",
-  type: ValueType.DateTime,
-}, {
-  name: "endTime",
-  type: ValueType.DateTime,
-}];
+export const queryGetCompositeIndexSchema: ValidateFieldArr = [...queryBaseRequiredQuerySchema];

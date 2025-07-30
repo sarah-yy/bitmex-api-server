@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { validateBodyObj } from "validate-ts-obj";
-import { QueryGetLeaderboardReq, queryGetLeaderboardSchema } from "../constants";
+import { QueryGetOrderBookReq, queryGetOrderBookSchema } from "../constants";
 import { BitmexClient, getConfig, getParsedQueryObj, ReturnTypes } from "../utils";
 
 const config = getConfig();
@@ -11,13 +11,13 @@ if (!config.bitmexApi?.keyId || !config.bitmexApi?.keySecret) {
 
 const bitmexClient = new BitmexClient(config.bitmexApi.keyId, config.bitmexApi.keySecret);
 
-export const getLeaderboard = async (req: Request, res: Response) => {
-  const queryObj = getParsedQueryObj(req.query, queryGetLeaderboardSchema);
-  const validateOutcome = validateBodyObj(queryObj, queryGetLeaderboardSchema);
+export const getOrderbookL2 = async (req: Request, res: Response) => {
+  const queryObj = getParsedQueryObj(req.query, queryGetOrderBookSchema);
+  const validateOutcome = validateBodyObj(queryObj, queryGetOrderBookSchema);
   if (typeof validateOutcome === "string") {
     return res.status(403).send(`Query params error: ${validateOutcome}`);
   }
 
-  const leaderboard = await bitmexClient.Leaderboard(queryObj as QueryGetLeaderboardReq);
-  res.status(200).set("Content-Type", ReturnTypes.JSON).send(leaderboard);
+  const orderbookL2 = await bitmexClient.OrderBookL2(queryObj as QueryGetOrderBookReq);
+  res.status(200).set("Content-Type", ReturnTypes.JSON).send(orderbookL2);
 };

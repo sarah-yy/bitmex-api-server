@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, Instrument, LeaderboardItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultLeaderboardReq } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, defaultGetQuoteReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj, QueryGetQuoteReq, QueryGetBucketedQuoteReq, defaultGetBucketedQuoteReq, QuoteItem, QueryGetInsuranceReq, InsuranceObj } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -20,6 +20,32 @@ export class BitmexClient {
     }
     this.keyId = keyId;
     this.keySecret = keySecret;
+  }
+
+  /**
+   * Funding endpoints
+   */
+  public async Funding(req: QueryGetFundingReq = defaultGetFundingReq): Promise<FundingItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+
+      const url = getReqUrl(this.URL, PATHS.Funding.All, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Funding.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as FundingItem[]))
+        .catch(reject);
+    });
   }
 
   /**
@@ -92,14 +118,21 @@ export class BitmexClient {
     });
   }
 
-  public async CompositeIndex(req: QueryGetCompositeIndexReq = {}): Promise<CompositeIndexObj[]> {
+  public async CompositeIndex(req: QueryGetCompositeIndexReq = defaultGetCompositeIndexReq): Promise<CompositeIndexObj[]> {
     return new Promise((resolve, reject) => {
-      const url = getReqUrl(this.URL, PATHS.Instrument.CompositeIndex, req as BaseRequest);
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+
+      const url = getReqUrl(this.URL, PATHS.Instrument.CompositeIndex, parsedParams);
       const headers = this.genBitmexHeadersObj(
         PATHS.Instrument.CompositeIndex,
         defaultExpiryDelay,
         HTTPMethod.Get,
-        getQueryParamsStr(req as BaseRequest),
+        getQueryParamsStr(parsedParams),
       );
       fetch(url, { headers })
         .then((response) => response.json())
@@ -125,6 +158,26 @@ export class BitmexClient {
   }
 
   /**
+   * Insurance endpoints
+   */
+  public async Insurance(req: QueryGetInsuranceReq): Promise<InsuranceObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedReq = { ...req } as BaseRequest;
+      const url = getReqUrl(this.URL, PATHS.Insurance.All, parsedReq);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Insurance.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedReq),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as InsuranceObj[]))
+        .catch(reject);
+    });
+  }
+
+  /**
    * Leaderboard endpoints
    */
   public async Leaderboard(req: QueryGetLeaderboardReq = defaultLeaderboardReq): Promise<LeaderboardItem[]> {
@@ -140,6 +193,218 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as LeaderboardItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Liquidations endpoints
+   */
+  public async Liquidations(req: QueryGetLiquidationsReq): Promise<LiquidationObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedReq = { ...req } as BaseRequest;
+      const url = getReqUrl(this.URL, PATHS.Liquidation.All, parsedReq);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Liquidation.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedReq),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as LiquidationObj[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Orderbook endpoints
+   */
+  public async OrderBookL2(req: QueryGetOrderBookReq = defaultGetOrderBookReq): Promise<OrderBookItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = { ...req };
+
+      const url = getReqUrl(this.URL, PATHS.Orderbook.L2, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Orderbook.L2,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as OrderBookItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Quote endpoints
+   */
+  public async Quote(req: QueryGetQuoteReq = defaultGetQuoteReq): Promise<QuoteItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Quote.All, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Quote.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as QuoteItem[]))
+        .catch(reject);
+    });
+  }
+
+  public async BucketedQuote(req: QueryGetBucketedQuoteReq = defaultGetBucketedQuoteReq): Promise<QuoteItem[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Quote.Bucketed, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Quote.Bucketed,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as QuoteItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Settlement endpoints
+   */
+  public async Settlement(req: QueryGetSettlementReq): Promise<SettlementObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+
+      const url = getReqUrl(this.URL, PATHS.Settlement.History, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Settlement.History,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as SettlementObj[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Stats endpoints 
+   */
+  public async Stats(): Promise<StatsItem[]> {
+    return new Promise((resolve, reject) => {
+      const url = getReqUrl(this.URL, PATHS.Stats.All);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Stats.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr({}),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as StatsItem[]))
+        .catch(reject);
+    });
+  }
+
+  public async StatsHistory(): Promise<StatsHistoryItem[]> {
+    return new Promise((resolve, reject) => {
+      const url = getReqUrl(this.URL, PATHS.Stats.History);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Stats.History,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr({}),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as StatsHistoryItem[]))
+        .catch(reject);
+    });
+  }
+
+  public async StatsHistoryUSD(): Promise<StatsHistoryUSDItem[]> {
+    return new Promise((resolve, reject) => {
+      const url = getReqUrl(this.URL, PATHS.Stats.HistoryUSD);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Stats.HistoryUSD,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr({}),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as StatsHistoryUSDItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Trades endpoints
+   */
+  public async Trades(req: QueryGetTradesReq): Promise<TradeObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Trade.All, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Trade.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as TradeObj[]))
+        .catch(reject);
+    });
+  }
+
+  public async BucketedTrades(req: QueryGetBucketedTradesReq = defaultGetBucketedTradesReq): Promise<TradeBucketObj[]> {
+    return new Promise((resolve, reject) => {
+      const parsedParams: BaseRequest = {
+        ...req,
+        ...req.columns && ({
+          columns: JSON.stringify(req.columns),
+        }),
+      };
+      const url = getReqUrl(this.URL, PATHS.Trade.Bucketed, parsedParams);
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Trade.Bucketed,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr(parsedParams),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as TradeBucketObj[]))
         .catch(reject);
     });
   }
