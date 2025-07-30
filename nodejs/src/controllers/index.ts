@@ -1,4 +1,5 @@
 export * as Funding from "./funding";
+export * as Guild from "./guild";
 export * as Instrument from "./instrument";
 export * as Insurance from "./insurance";
 export * as Leaderboard from "./leaderboard";

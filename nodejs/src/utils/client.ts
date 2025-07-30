@@ -1,6 +1,6 @@
 import { createHmac } from "crypto";
 import fetch from "node-fetch";
-import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, defaultGetQuoteReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj, QueryGetQuoteReq, QueryGetBucketedQuoteReq, defaultGetBucketedQuoteReq, QuoteItem, QueryGetInsuranceReq, InsuranceObj } from "../constants";
+import { ActiveIntervalResponseObj, BaseRequest, CompositeIndexObj, FundingItem, GuildItem, Instrument, LeaderboardItem, OrderBookItem, PATHS, QueryGetCompositeIndexReq, QueryGetUsdVolumesReq, QueryGetInstrumentReq, RequestValue, SimpleMap, UsdVolumeObj, QueryGetLeaderboardReq, defaultGetBucketedTradesReq, defaultGetCompositeIndexReq, defaultLeaderboardReq, QueryGetFundingReq, defaultGetFundingReq, QueryGetOrderBookReq, defaultGetOrderBookReq, defaultGetQuoteReq, StatsItem, StatsHistoryItem, StatsHistoryUSDItem, QueryGetLiquidationsReq, LiquidationObj, TradeObj, QueryGetTradesReq, QueryGetBucketedTradesReq, TradeBucketObj, QueryGetSettlementReq, SettlementObj, QueryGetQuoteReq, QueryGetBucketedQuoteReq, defaultGetBucketedQuoteReq, QuoteItem, QueryGetInsuranceReq, InsuranceObj } from "../constants";
 import { ReturnTypes, appendSlash } from "./misc";
 
 type HeadersObj = SimpleMap<string>;
@@ -44,6 +44,25 @@ export class BitmexClient {
       fetch(url, { headers })
         .then((response) => response.json())
         .then((result) => resolve(result as FundingItem[]))
+        .catch(reject);
+    });
+  }
+
+  /**
+   * Guild endpoints
+   */
+  public async Guild(): Promise<GuildItem[]> {
+    return new Promise((resolve, reject) => {
+      const url = getReqUrl(this.URL, PATHS.Guild.All, {});
+      const headers = this.genBitmexHeadersObj(
+        PATHS.Guild.All,
+        defaultExpiryDelay,
+        HTTPMethod.Get,
+        getQueryParamsStr({}),
+      );
+      fetch(url, { headers })
+        .then((response) => response.json())
+        .then((result) => resolve(result as GuildItem[]))
         .catch(reject);
     });
   }

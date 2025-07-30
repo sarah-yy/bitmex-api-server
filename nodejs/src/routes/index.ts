@@ -1,5 +1,6 @@
 import { Router } from "express";
 import fundingRoutes from "./funding";
+import guildRoutes from "./guild";
 import instrumentRoutes from "./instrument";
 import insuranceRoutes from "./insurance";
 import leaderboardRoutes from "./leaderboard";
@@ -13,6 +14,7 @@ import tradeRoutes from "./trade";
 const router = Router();
 
 router.use(fundingRoutes);
+router.use(guildRoutes);
 router.use(instrumentRoutes);
 router.use(insuranceRoutes);
 router.use(leaderboardRoutes);
